@@ -20,7 +20,7 @@ public class FutoshikiPuzzleTest {
     @Test
     public void setUp() {
         FutoshikiPuzzle f = new FutoshikiPuzzle(5);
-        assertEquals(0, f.getSquare(0, 0));
+        assertEquals(null, f.getSquare(0, 0));
         assertEquals(null, f.getColumnConstraint(0, 0));
         assertEquals(null, f.getRowConstraint(0, 0));
     }
@@ -32,8 +32,8 @@ public class FutoshikiPuzzleTest {
     @Test
     public void setSquareTest() {
         FutoshikiPuzzle f = new FutoshikiPuzzle(4);
-        f.setSquare(1, 1, 1);
-        assertEquals(1, f.getSquare(1, 1));
+        f.setSquare(1, 1, 1, false);
+        assertEquals(1, f.getSquareCell(1, 1));
     }
     
     /**
@@ -166,7 +166,7 @@ public class FutoshikiPuzzleTest {
             }
         }
 
-        int[][] grid = f.getGrid();
+        FutoshikiSquare[][] grid = f.getGrid();
         String[] values = {"[1-5]", " "};
         for (int i = 0; i < grid.length; i++) {
             Set<String> set = new HashSet<>(Arrays.asList(rc[i]));

@@ -6,9 +6,9 @@
 package FutoshikiPuzzle;
 
 public class FutoshikiSquare {
-    private int cell = 0;
-    private int answer = 0;
-    private boolean editable = true;
+    private int cell;
+    private int answer;
+    private boolean editable;
 
     public FutoshikiSquare(int cell, int answer, boolean editable) {
         this.cell = cell;
