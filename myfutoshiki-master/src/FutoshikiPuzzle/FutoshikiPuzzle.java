@@ -90,21 +90,36 @@ public class FutoshikiPuzzle {
                 setRowConstraint(i, j, getRandom(10));
             }
         }
+        
+        
+        
         for (int j = 0; j < grid.length; j++) {
             enterDashes();
             
             int[] numbers = new int[gridsize];
-            for (int m = 1; m <= gridsize; m++) {
-                numbers[getRandom(gridsize)]=m;
-                System.out.println("m: "+m);
+            int m = 1;
+            while (m<= gridsize) {
+                int index = getRandom(gridsize);
+                if (numbers[index] == 0) {
+                    numbers[index]=m;
+                    System.out.println("Number going in: "+m+" at: "+index);
+                    m++;
+                }
+                System.out.println("missed at "+index);
+                //m++;
             }
+            
             
             
             for (int i = 0; i < grid[j].length; i++) {
                 Boolean fill = true;
                 
+                for (int number : numbers) {
+                    System.out.println(number);
+                }
+                
                 if (fill) {
-                    setSquare(getRandom(grid.length) + 1, i, j, false); //change with random boolean to make it unmarked
+                    setSquare(numbers[i], i, j, false); //change with random boolean to make it unmarked
                 }
 
                 if (grid[i][j].getCell() == 0) {
