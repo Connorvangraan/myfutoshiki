@@ -194,7 +194,7 @@ public class FutoshikiPuzzleTest {
         f.fillPuzzle();
         //System.out.println(f.displayString());
         assertEquals(f.isLegal(),false);
-        
+        System.out.println(f.displayString());
     }
     
     /**

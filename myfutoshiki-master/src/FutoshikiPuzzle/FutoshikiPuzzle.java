@@ -101,7 +101,7 @@ public class FutoshikiPuzzle {
                 if (grid[i][j].getCell() == 0) {
                     board = board.concat(" |   | ");
                 } else {
-                    board = board.concat(" | " + grid[i][j] + " | ");
+                    board = board.concat(" | " + grid[i][j].getCell() + " | ");
                 }
 
                 if (j == 0 && i < grid.length - 1) {
@@ -113,7 +113,7 @@ public class FutoshikiPuzzle {
             enterDashes();
             for (int k = 0; k < grid.length; k++) {
                 if (j < grid.length - 1) {
-                    board = board.concat("   " + rowConstraints[k][j] + "    ");
+                    board = board.concat("   " + rowConstraints[k][j].getType() + "    ");
                 }
             }
         }
@@ -178,7 +178,7 @@ public class FutoshikiPuzzle {
                 }
             }
         }
-        
+
         legal = getProblems().isEmpty();
         System.out.println("Is legal: " + legal);
         return legal;

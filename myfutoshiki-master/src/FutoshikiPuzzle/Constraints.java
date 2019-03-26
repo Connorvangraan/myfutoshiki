@@ -11,5 +11,4 @@ public abstract class Constraints {
     public String getType() {
         return type;
     }
-
 }
