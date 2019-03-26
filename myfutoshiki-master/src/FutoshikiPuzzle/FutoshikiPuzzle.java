@@ -90,36 +90,37 @@ public class FutoshikiPuzzle {
                 setRowConstraint(i, j, getRandom(10));
             }
         }
-        
-        
-        
+
         for (int j = 0; j < grid.length; j++) {
             enterDashes();
-            
             int[] numbers = new int[gridsize];
+
             int m = 1;
-            while (m<= gridsize) {
+            while (m <= gridsize) {
                 int index = getRandom(gridsize);
                 if (numbers[index] == 0) {
-                    numbers[index]=m;
-                    System.out.println("Number going in: "+m+" at: "+index);
+                    numbers[index] = m;
                     m++;
                 }
-                System.out.println("missed at "+index);
-                //m++;
             }
-            
-            
-            
+
             for (int i = 0; i < grid[j].length; i++) {
                 Boolean fill = true;
-                
-                for (int number : numbers) {
-                    System.out.println(number);
-                }
-                
-                if (fill) {
-                    setSquare(numbers[i], i, j, false); //change with random boolean to make it unmarked
+                System.out.println("i: "+i);
+
+                boolean success = false;
+                while (success == false) {
+                    if (j > 0) {
+                        if (checkColumnNumbers(j, i)) {
+                            setSquare(numbers[i], i, j, false); //change with random boolean to make it unmarked
+                            success = true;
+                        }
+                    }
+                    else {
+                        setSquare(numbers[i], i, j, false);
+                        success = true; 
+                    }
+
                 }
 
                 if (grid[i][j].getCell() == 0) {
@@ -134,6 +135,7 @@ public class FutoshikiPuzzle {
                     board = board.concat(colConstraints[i][j - 1].getType());
                 }
             }
+
             enterDashes();
             for (int k = 0; k < grid.length; k++) {
                 if (j < grid.length - 1) {
@@ -182,17 +184,22 @@ public class FutoshikiPuzzle {
         return "\n";
     }
 
+    /**
+     * public int[] getNumbers() { int[] numbers = new int[gridsize]; int m = 1;
+     * while (m <= gridsize) { int index = getRandom(gridsize); if
+     * (numbers[index] == 0) { numbers[index] = m; m++; } } return numbers; }
+     *
+     */
     public boolean isLegal() {
         boolean legal;
-        for (FutoshikiSquare[] square : grid) {
-            for (int i = 0; i < grid.length; i++) {
-                System.out.print(square[i].getCell());
-            }
-            System.out.println(newLine());
-        }
 
+        /**
+         * for (FutoshikiSquare[] square : grid) { for (int i = 0; i <
+         * grid.length; i++) { System.out.print(square[i].getCell()); }
+         * System.out.println(newLine()); }
+        *
+         */
         for (int row = 0; row < grid.length; row++) {
-            System.out.println("y: " + row);
             for (int column = 0; column < grid.length; column++) {
                 System.out.println("Current number: " + grid[row][column].getCell());
                 checkRow(row, column);
@@ -219,25 +226,56 @@ public class FutoshikiPuzzle {
     }
 
     public boolean checkColumn(int row, int column) {
+        boolean legal = checkColumnNumbers(row, column);
+        if (legal) {
+            legal = checkColumnConstraints(row, column);
+        }
+        return legal;
+    }
+
+    public boolean checkColumnNumbers(int row, int column) {
+        System.out.println("Row: "+row+" Column: "+column);
         boolean legal = true;
         for (int y = 0; y < grid.length; y++) {
+            System.out.println("Y: " + y);
             if (y != row) {
-                if (grid[y][column].getCell() == grid[row][column].getCell()) {
-                    errors.add(grid[y][column].getCell() + " occurs again at " + "row:" + y + " column: " + column);
+                System.out.println("passed ");
+                try {
+                    if (grid[y][column].getCell() == grid[row][column].getCell()) {
+                        errors.add(grid[y][column].getCell() + " occurs again at " + "row:" + y + " column: " + column);
+                        legal = false;
+                        System.out.println("tried");
+                    }
+                    else {
+                        System.out.println("success");
+                    }
+                } catch (Exception e) {
+                    System.out.println("caught");
                 }
             }
         }
+        System.out.println("Column clear: " + legal);
+        return legal;
+    }
+
+    public boolean checkColumnConstraints(int row, int column) {
+        boolean legal = true;
 
         if (row < rowConstraints.length - 1 && column < rowConstraints[row].length) {
-            if (rowConstraints[row + 1][column].getType().equals("V")) {
-                if (grid[row][column].getCell() <= grid[row + 1][column].getCell()) {
-                    errors.add("rowcon " + grid[row][column].getCell() + " is not > " + grid[row + 1][column].getCell());
-                }
+            try {
+                if (rowConstraints[row + 1][column].getType().equals("V")) {
+                    if (grid[row][column].getCell() <= grid[row + 1][column].getCell()) {
+                        errors.add("rowcon " + grid[row][column].getCell() + " is not > " + grid[row + 1][column].getCell());
+                        legal = false;
+                    }
 
-            } else if (rowConstraints[row + 1][column].getType().equals("^")) {
-                if (grid[row][column].getCell() >= grid[row + 1][column].getCell()) {
-                    errors.add("rowcon " + grid[row][column].getCell() + " is not < " + grid[row + 1][column].getCell());
+                } else if (rowConstraints[row + 1][column].getType().equals("^")) {
+                    if (grid[row][column].getCell() >= grid[row + 1][column].getCell()) {
+                        errors.add("rowcon " + grid[row][column].getCell() + " is not < " + grid[row + 1][column].getCell());
+                        legal = false;
+                    }
                 }
+            } catch (Exception e) {
             }
         }
         return legal;
@@ -245,26 +283,51 @@ public class FutoshikiPuzzle {
 
     public boolean checkRow(int row, int column) {
         boolean legal = true;
+        legal = checkRowNumbers(row, column);
+        if (legal) {
+            legal = checkRowConstraints(row, column);
+        }
+        return legal;
+    }
+
+    public boolean checkRowNumbers(int row, int column) {
+        boolean legal = true;
+
         for (int x = 0; x < grid.length; x++) {
             if (x != column) {
-                if (grid[row][x].getCell() == grid[row][column].getCell()) {
-                    errors.add(grid[row][column].getCell() + " occurs again at " + "row:" + row + " column:" + x);
-                    legal = false;
+                try {
+                    if (grid[row][x].getCell() == grid[row][column].getCell()) {
+                        errors.add(grid[row][column].getCell() + " occurs again at " + "row:" + row + " column:" + x);
+                        legal = false;
+                    }
+                } catch (Exception e) {
+                    legal = true;
                 }
             }
         }
 
-        if (column < colConstraints[row].length - 1) {
-            if (getColumnConstraintType(row, column).equals("<")) {
-                if (grid[row][column].getCell() >= grid[row][column + 1].getCell()) {
-                    errors.add("colcon " + grid[row][column].getCell() + " is not < " + grid[row][column + 1]);
-                }
-            } else if (getColumnConstraintType(row, column).equals(">")) {
-                if (grid[row][column].getCell() <= grid[row][column + 1].getCell()) {
-                    errors.add("colcon " + grid[row][column].getCell() + " is not > " + grid[row][column + 1].getCell());
-                }
-            }
+        System.out.println("Row clear: " + legal);
+        return legal;
+    }
 
+    public boolean checkRowConstraints(int row, int column) {
+        boolean legal = true;
+        if (column < colConstraints[row].length - 1) {
+            try {
+                if (getColumnConstraintType(row, column).equals("<")) {
+                    if (grid[row][column].getCell() >= grid[row][column + 1].getCell()) {
+                        errors.add("colcon " + grid[row][column].getCell() + " is not < " + grid[row][column + 1].getCell());
+                        legal = false;
+                    }
+                } else if (getColumnConstraintType(row, column).equals(">")) {
+                    if (grid[row][column].getCell() <= grid[row][column + 1].getCell()) {
+                        errors.add("colcon " + grid[row][column].getCell() + " is not > " + grid[row][column + 1].getCell());
+                        legal = false;
+                    }
+                }
+            } catch (Exception e) {
+                legal = true;
+            }
         }
         return legal;
     }
