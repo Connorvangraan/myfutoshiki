@@ -59,9 +59,9 @@ public class FutoshikiPuzzleTest {
         for (int i = 0; i < 3; i++) {
             f.setRowConstraint(i, i, i);
         }
-        assertEquals("^", f.getRowConstraint(0, 0));
-        assertEquals("V", f.getRowConstraint(1, 1));
-        assertEquals(" ", f.getRowConstraint(2, 2));
+        assertEquals("V", f.getRowConstraintType(0, 0));
+        assertEquals("^", f.getRowConstraintType(1, 1));
+        assertEquals(" ", f.getRowConstraintType(2, 2));
     }
     
     /**
@@ -87,9 +87,9 @@ public class FutoshikiPuzzleTest {
         for (int i = 0; i < 3; i++) {
             f.setColumnConstraint(i, i, i);
         }
-        assertEquals(">", f.getColumnConstraintValue(0, 0));
-        assertEquals("<", f.getColumnConstraintValue(1, 1));
-        assertEquals(" ", f.getColumnConstraintValue(2, 2));
+        assertEquals(">", f.getColumnConstraintType(0, 0));
+        assertEquals("<", f.getColumnConstraintType(1, 1));
+        assertEquals(" ", f.getColumnConstraintType(2, 2));
     }
     
     /**

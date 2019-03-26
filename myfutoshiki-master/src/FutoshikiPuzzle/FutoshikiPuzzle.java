@@ -9,7 +9,7 @@ public class FutoshikiPuzzle {
     FutoshikiSquare[][] grid;
     int gridsize;
     Constraints[][] colConstraints;
-    String[][] rowConstraints;
+    Constraints[][] rowConstraints;
     Scanner scanner = new Scanner(System.in);
     Random rand = new Random();
     String board = "";
@@ -19,14 +19,14 @@ public class FutoshikiPuzzle {
         this.gridsize = gridsize;
         grid = new FutoshikiSquare[gridsize][gridsize];
         colConstraints = new Constraints[gridsize][gridsize - 1];
-        rowConstraints = new String[gridsize][gridsize - 1];
+        rowConstraints = new Constraints[gridsize][gridsize - 1];
     }
 
-    public void setSquare(int input, int y, int x,boolean editable) {
-        grid[y][x] = new FutoshikiSquare(input,0,editable);
+    public void setSquare(int input, int y, int x, boolean editable) {
+        grid[y][x] = new FutoshikiSquare(input, 0, editable);
     }
-    
-    public FutoshikiSquare getSquare (int x, int y) {
+
+    public FutoshikiSquare getSquare(int x, int y) {
         return grid[x][y];
     }
 
@@ -37,19 +37,23 @@ public class FutoshikiPuzzle {
     public void setRowConstraint(int y, int x, int type) {
         switch (type) {
             case 0:
-                rowConstraints[y][x] = "^";
+                rowConstraints[y][x] = new GreaterThan(false);
                 break;
             case 1:
-                rowConstraints[y][x] = "V";
+                rowConstraints[y][x] = new SmallerThan(false);
                 break;
             default:
-                rowConstraints[y][x] = " ";
+                rowConstraints[y][x] = new Empty();
                 break;
         }
     }
 
-    public String getRowConstraint(int y, int x) {
+    public Constraints getRowConstraint(int y, int x) {
         return rowConstraints[y][x];
+    }
+
+    public String getRowConstraintType(int y, int x) {
+        return rowConstraints[y][x].getType();
     }
 
     public void setColumnConstraint(int y, int x, int type) {
@@ -69,8 +73,8 @@ public class FutoshikiPuzzle {
     public Constraints getColumnConstraint(int y, int x) {
         return colConstraints[y][x];
     }
-    
-    public String getColumnConstraintValue(int y, int x) {
+
+    public String getColumnConstraintType(int y, int x) {
         return colConstraints[y][x].getType();
     }
 
@@ -91,7 +95,7 @@ public class FutoshikiPuzzle {
             for (int i = 0; i < grid[j].length; i++) {
                 Boolean fill = true;
                 if (fill) {
-                    setSquare(getRandom(grid.length) + 1, i, j,false); //change with random boolean to make it unmarked
+                    setSquare(getRandom(grid.length) + 1, i, j, false); //change with random boolean to make it unmarked
                 }
 
                 if (grid[i][j].getCell() == 0) {
@@ -119,7 +123,7 @@ public class FutoshikiPuzzle {
         return grid;
     }
 
-    public String[][] getAllRowConstraints() {
+    public Constraints[][] getAllRowConstraints() {
         return rowConstraints;
     }
 
@@ -174,13 +178,8 @@ public class FutoshikiPuzzle {
                 }
             }
         }
-
-        if (getProblems().isEmpty()) {
-            legal = true;
-        } else {
-            legal = false;
-        }
-
+        
+        legal = getProblems().isEmpty();
         System.out.println("Is legal: " + legal);
         return legal;
     }
@@ -206,12 +205,12 @@ public class FutoshikiPuzzle {
         }
 
         if (row < rowConstraints.length - 1 && column < rowConstraints[row].length) {
-            if (rowConstraints[row + 1][column].equals("V")) {
+            if (rowConstraints[row + 1][column].getType().equals("V")) {
                 if (grid[row][column].getCell() <= grid[row + 1][column].getCell()) {
                     errors.add("rowcon " + grid[row][column].getCell() + " is not > " + grid[row + 1][column].getCell());
                 }
 
-            } else if (rowConstraints[row + 1][column].equals("^")) {
+            } else if (rowConstraints[row + 1][column].getType().equals("^")) {
                 if (grid[row][column].getCell() >= grid[row + 1][column].getCell()) {
                     errors.add("rowcon " + grid[row][column].getCell() + " is not < " + grid[row + 1][column].getCell());
                 }
@@ -232,11 +231,11 @@ public class FutoshikiPuzzle {
         }
 
         if (column < colConstraints[row].length - 1) {
-            if (getColumnConstraint(row, column).equals("<")) {
+            if (getColumnConstraintType(row, column).equals("<")) {
                 if (grid[row][column].getCell() >= grid[row][column + 1].getCell()) {
                     errors.add("colcon " + grid[row][column].getCell() + " is not < " + grid[row][column + 1]);
                 }
-            } else if (getColumnConstraint(row, column).equals(">")) {
+            } else if (getColumnConstraintType(row, column).equals(">")) {
                 if (grid[row][column].getCell() <= grid[row][column + 1].getCell()) {
                     errors.add("colcon " + grid[row][column].getCell() + " is not > " + grid[row][column + 1].getCell());
                 }
