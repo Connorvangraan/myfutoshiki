@@ -9,20 +9,9 @@ package FutoshikiPuzzle;
  *
  * @author Connor
  */
-public class SmallerThan  extends Constraints {
-
-    public SmallerThan (boolean t) {
-        if (t) {
-            type = "<";
-        } else {
-            type =  "^";
-        }
+public class Empty extends Constraints{
+    public String getType(){
+        return " ";
     }
     
-    public String getType() {
-        return type;
-    }
-    
-    
-   
 }

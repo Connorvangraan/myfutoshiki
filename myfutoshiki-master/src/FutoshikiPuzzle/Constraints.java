@@ -5,11 +5,11 @@
  */
 package FutoshikiPuzzle;
 
-/**
- *
- * @author Connor
- */
+
 public abstract class Constraints {
-    
+    String type;
+    public String getType() {
+        return type;
+    }
 
 }

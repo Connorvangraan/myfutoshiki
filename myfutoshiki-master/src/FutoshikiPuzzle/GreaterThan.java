@@ -1,18 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package FutoshikiPuzzle;
 
-/**
- *
- * @author Connor
- */
 public class GreaterThan extends Constraints {
-
-    public GreaterThan (int x, int y) {
-        
+    
+    public GreaterThan(boolean t) {
+        if (t) {
+            type = ">";
+        } else {
+            type = "V";
+        }
     }
+
+    public boolean process(int x, int y) {
+        return x > y;
+    }
+    
+    
+    public String getType () {
+        return type;
+    }
+
     
 }

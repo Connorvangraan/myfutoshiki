@@ -8,7 +8,7 @@ public class FutoshikiPuzzle {
 
     FutoshikiSquare[][] grid;
     int gridsize;
-    String[][] colConstraints;
+    Constraints[][] colConstraints;
     String[][] rowConstraints;
     Scanner scanner = new Scanner(System.in);
     Random rand = new Random();
@@ -18,7 +18,7 @@ public class FutoshikiPuzzle {
     public FutoshikiPuzzle(int gridsize) {
         this.gridsize = gridsize;
         grid = new FutoshikiSquare[gridsize][gridsize];
-        colConstraints = new String[gridsize][gridsize - 1];
+        colConstraints = new Constraints[gridsize][gridsize - 1];
         rowConstraints = new String[gridsize][gridsize - 1];
     }
 
@@ -55,19 +55,23 @@ public class FutoshikiPuzzle {
     public void setColumnConstraint(int y, int x, int type) {
         switch (type) {
             case 0:
-                colConstraints[y][x] = ">";
+                colConstraints[y][x] = new GreaterThan(true);
                 break;
             case 1:
-                colConstraints[y][x] = "<";
+                colConstraints[y][x] = new SmallerThan(true);
                 break;
             default:
-                colConstraints[y][x] = " ";
+                colConstraints[y][x] = new Empty();
                 break;
         }
     }
 
-    public String getColumnConstraint(int y, int x) {
+    public Constraints getColumnConstraint(int y, int x) {
         return colConstraints[y][x];
+    }
+    
+    public String getColumnConstraintValue(int y, int x) {
+        return colConstraints[y][x].getType();
     }
 
     public void fillPuzzle() {
@@ -97,9 +101,9 @@ public class FutoshikiPuzzle {
                 }
 
                 if (j == 0 && i < grid.length - 1) {
-                    board = board.concat(colConstraints[i][j]);
+                    board = board.concat(colConstraints[i][j].getType());
                 } else if (i < grid.length - 1) {
-                    board = board.concat(colConstraints[i][j - 1]);
+                    board = board.concat(colConstraints[i][j - 1].getType());
                 }
             }
             enterDashes();
@@ -119,7 +123,7 @@ public class FutoshikiPuzzle {
         return rowConstraints;
     }
 
-    public String[][] getAllColConstraints() {
+    public Constraints[][] getAllColConstraints() {
         return colConstraints;
     }
 
