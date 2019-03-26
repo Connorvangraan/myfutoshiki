@@ -92,8 +92,17 @@ public class FutoshikiPuzzle {
         }
         for (int j = 0; j < grid.length; j++) {
             enterDashes();
+            
+            int[] numbers = new int[gridsize];
+            for (int m = 1; m <= gridsize; m++) {
+                numbers[getRandom(gridsize)]=m;
+                System.out.println("m: "+m);
+            }
+            
+            
             for (int i = 0; i < grid[j].length; i++) {
                 Boolean fill = true;
+                
                 if (fill) {
                     setSquare(getRandom(grid.length) + 1, i, j, false); //change with random boolean to make it unmarked
                 }
