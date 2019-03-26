@@ -106,19 +106,18 @@ public class FutoshikiPuzzle {
 
             for (int i = 0; i < grid[j].length; i++) {
                 Boolean fill = true;
-                System.out.println("i: "+i);
 
                 boolean success = false;
                 while (success == false) {
-                    if (j > 0) {
-                        if (checkColumnNumbers(j, i)) {
+                    if (i > 0) {
+                        if (checkRowNumbers(i, j) && checkColumnNumbers(i, j)) {
                             setSquare(numbers[i], i, j, false); //change with random boolean to make it unmarked
                             success = true;
                         }
                     }
                     else {
                         setSquare(numbers[i], i, j, false);
-                        success = true; 
+                        success = true;
                     }
 
                 }
@@ -234,20 +233,17 @@ public class FutoshikiPuzzle {
     }
 
     public boolean checkColumnNumbers(int row, int column) {
-        System.out.println("Row: "+row+" Column: "+column);
         boolean legal = true;
+        //System.out.println("Checking: "+grid[row][column].getCell());
         for (int y = 0; y < grid.length; y++) {
             System.out.println("Y: " + y);
             if (y != row) {
                 System.out.println("passed ");
                 try {
+                    System.out.println("tried");
                     if (grid[y][column].getCell() == grid[row][column].getCell()) {
                         errors.add(grid[y][column].getCell() + " occurs again at " + "row:" + y + " column: " + column);
                         legal = false;
-                        System.out.println("tried");
-                    }
-                    else {
-                        System.out.println("success");
                     }
                 } catch (Exception e) {
                     System.out.println("caught");
